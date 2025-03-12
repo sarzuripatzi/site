@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Gestión de Datos</title>
+    </head>
+    <body>
+        <h1>Gestión de Datos</h1>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre"><br><br>
+
+        <label for="edad">Edad:</label>
+        <input type="number" id="edad"><br><br>
+
+        <label for="correo">Correo:</label>
+        <input type="email" id="correo"><br><br>
+
+        <button onclick="guardar()">Guardar</button><br><br>
+
+        <button onclick="mostrar()">Mostrar Datos</button>
+        <ul id="listaDatos"></ul><br><br>
+
+        <label for="buscarNombre">Buscar por Nombre:</label>
+        <input type="text" id="buscarNombre">
+        <button onclick="buscar()">Buscar</button>
+        <ul id="resultadosBusqueda"></ul>
+
+        <script>
+            const urlApp = 'https://script.google.com/macros/s/AKfycbwsiJeB6DdCsGCisWIeFuohp93pg03ia6XzIYfImbv3ePtnJIvAtmf7iSdRbhNPHMIO/exec';
+
+            function guardar() {
+                const nombre = document.getElementById("nombre").value;
+                const edad = document.getElementById("edad").value;
+                const correo = document.getElementById("correo").value;
+
+                const url = `${urlApp}?action=guardar&nombre=${nombre}&edad=${edad}&correo=${correo}`;
+                fetch(url);
+            }
+
+
+            function mostrar() {
+                const listaDatos = document.getElementById("listaDatos");
+                listaDatos.innerHTML = "";
+
+                const url = `${urlApp}?action=mostrar`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(datos => {
+                        datos.forEach(dato => {
+                            const li = document.createElement("li");
+                            li.textContent = `Nombre: ${dato[0]}, Edad: ${dato[1]}, Correo: ${dato[2]}`;
+                            listaDatos.appendChild(li);
+                        });
+                    });
+            }
+
+            function buscar() {
+                const nombreBuscar = document.getElementById("buscarNombre").value;
+                const resultadosBusqueda = document.getElementById("resultadosBusqueda");
+                resultadosBusqueda.innerHTML = "";
+
+                const url = `${urlApp}?action=buscar&nombreBuscar=${nombreBuscar}`;
+                fetch(url)
+                    .then(response => response.json())
+                    .then(resultados => {
+                        resultados.forEach(resultado => {
+                            const li = document.createElement("li");
+                            li.textContent = `Nombre: ${resultado[0]}, Edad: ${resultado[1]}, Correo: ${resultado[2]}`;
+                            resultadosBusqueda.appendChild(li);
+                        });
+                    });
+            }
+        </script>
+    </body>
+    </html>
